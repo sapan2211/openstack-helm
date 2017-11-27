@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: odl-deployment
+  namespace: openstack
+  labels:
+    app: odl
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: odl
+    spec:
+      containers:
+      - name: odl
+        image: egonzalez90/opendaylight
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8101
+          protocol: TCP
+        - containerPort: 8181
+          protocol: TCP
