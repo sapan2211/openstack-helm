@@ -198,6 +198,13 @@ kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
 helm install --namespace=openstack ${WORK_DIR}/congress --name=congress
 kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
 
+if [ "x$INTEGRATION" == "xaio" ]; then
+  helm install --namespace=openstack ${WORK_DIR}/horizon --name=horizon \
+    --set pod.replicas.server=1
+  kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
+fi
+
+
 if [ "x$INTEGRATION" == "xmulti" ]; then
   helm install --namespace=openstack ${WORK_DIR}/horizon --name=horizon
   kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
