@@ -4,8 +4,18 @@ metadata:
   name: odl-service
   namespace: openstack
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
+  - port: 6633
+    targetPort: 6633
+    #nodePort: 30001
+    protocol: TCP
+    name: neutron
+  - port: 6640
+    targetPort: 6640
+    #nodePort: 30001
+    protocol: TCP
+    name: karaf
   - port: 8080
     targetPort: 8080
     #nodePort: 30001
