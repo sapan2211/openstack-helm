@@ -10,12 +10,12 @@ spec:
     targetPort: 6633
     #nodePort: 30001
     protocol: TCP
-    name: neutron
+    name: s1
   - port: 6640
     targetPort: 6640
     #nodePort: 30001
     protocol: TCP
-    name: karaf
+    name: s2
   - port: 8080
     targetPort: 8080
     #nodePort: 30001

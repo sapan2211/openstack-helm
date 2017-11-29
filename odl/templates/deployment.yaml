@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: odl
-        image: sapan2211/odl-karaf:v1
+        image: sapan2211/odl-karaf-full
         ports:
         - containerPort: 6633
           protocol: TCP
