@@ -28,7 +28,7 @@ spec:
     name: karaf
   - port: 8181
     targetPort: 8181
-    #nodePort: 30002
+    nodePort: 8181
     protocol: TCP
     name: northbound
   selector:
