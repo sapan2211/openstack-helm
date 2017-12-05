@@ -12,9 +12,10 @@ spec:
       labels:
         app: odl
     spec:
+      #hostNetwork: true
       containers:
       - name: odl
-        image: sapan2211/odl-karaf-full
+        image: sapan2211/odl-karaf-boron:full
         ports:
         - containerPort: 6633
           protocol: TCP
