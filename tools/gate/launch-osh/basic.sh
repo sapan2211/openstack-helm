@@ -203,11 +203,11 @@ if [ "x$INTEGRATION" == "xaio" ]; then
     --set pod.replicas.server=1
   kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
 fi
-if [ "x$INTEGRATION" == "xaio" ]; then
-  helm install --namespace=openstack ${WORK_DIR}/odl --name=odl \
-    --set pod.replicas.server=1
-  kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
-fi
+#if [ "x$INTEGRATION" == "xaio" ]; then
+  #helm install --namespace=openstack ${WORK_DIR}/odl --name=odl \
+    #--set pod.replicas.server=1
+  #kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
+#fi
 
 
 if [ "x$INTEGRATION" == "xmulti" ]; then
