@@ -1,37 +1,75 @@
 # Default values for odl.
 # This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-replicaCount: 1
-image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
-service:
-  name: nginx
-  type: ClusterIP
-  externalPort: 80
-  internalPort: 80
-ingress:
-  enabled: false
-  # Used to create an Ingress record.
-  hosts:
-    - chart-example.local
-  annotations:
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  tls:
-    # Secrets must be manually created in the namespace.
-    # - secretName: chart-example-tls
-    #   hosts:
-    #     - chart-example.local
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+# Declare name/values to be passed into your templates.
+# name: value
+
+
+images:
+  tags:
+    odl: docker.io/sapan2211/odl-karaf-boron:full
+  pull_policy: "IfNotPresent"
+
+network:
+  node_port:
+    enabled: false
+    manager: 6640
+    controller1: 6653
+    odl_neutron_rest: 8080
+  cluster_ip:
+    enabled: true
+    manager: 6640
+    controller1: 6653
+    controller2: 6633
+    odl_neutron_rest: 8080
+    dashboard: 8181
+  port:
+    manager: 6640
+    controller1: 6653
+    controller2: 6633
+    odl_neutron_rest: 8080
+    dashboard: 8181
+
+labels:
+pod:
+  replicas:
+    controller: 1
+  mounts:
+    odl:
+      init_container: null
+  lifecycle:
+    upgrades:
+      deployments:
+        revision_history: 3
+        pod_replacement_strategy: RollingUpdate
+        rolling_update:
+          max_unavailable: 1
+          max_surge: 3
+        odl:
+          enabled: false
+          min_ready_seconds: 0
+          max_unavailable: 1
+  resources:
+    enabled: true
+    controller:
+      requests:
+        memory: "2048Mi"
+        cpu: "1000m"
+      limits:
+        memory: "4096Mi"
+        cpu: "2000m"
+manifests:
+  deployment: true
+  service: true
+
+endpoints:
+  odl:
+    name: odl
+    hosts:
+      default: odl
+      public: odl
+    host_fqdn_override:
+      default: null
+    path:
+      default: null
+    scheme:
+      default: http

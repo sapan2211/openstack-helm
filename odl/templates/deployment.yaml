@@ -1,29 +1,35 @@
+{{- if .Values.manifests.deployment }}
+{{- $envAll := . }}
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: odl-deployment
-  namespace: openstack
-  labels:
-    app: odl
+  name: odl
 spec:
-  replicas: 1
+  replicas: {{ .Values.pod.replicas.controller }}
+{{ tuple $envAll | include "helm-toolkit.snippets.kubernetes_upgrades_deployment" | indent 2 }}
   template:
     metadata:
       labels:
-        app: odl
+{{ tuple $envAll "odl" "controller" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
     spec:
-      #hostNetwork: true
+      initContainers:
       containers:
-      - name: odl
-        image: sapan2211/odl-karaf-boron:full
-        ports:
-        - containerPort: 6633
-          protocol: TCP
-        - containerPort: 6640
-          protocol: TCP
-        - containerPort: 8080
-          protocol: TCP
-        - containerPort: 8101
-          protocol: TCP
-        - containerPort: 8181
-          protocol: TCP
+        - name: odl
+          image: {{ .Values.images.tags.odl }}
+          imagePullPolicy: {{ .Values.images.pull_policy }}
+{{ tuple $envAll $envAll.Values.pod.resources.controller | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
+          ports:
+            - containerPort: {{.Values.network.port.manager}}
+            - containerPort: {{.Values.network.port.controller1}}
+            - containerPort: {{.Values.network.port.odl_neutron_rest}}
+            - containerPort: {{.Values.network.port.dashboard}}
+          securityContext:
+            runAsUser: 0
+          command:
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - logout
+{{- end }}

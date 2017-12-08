@@ -1,4 +1,9 @@
 apiVersion: v1
-description: odl chart
+description: OpenStack-Helm OpenDaylight
 name: odl
 version: 0.1.0
+home: https://www.opendaylight.org/
+icon: 
+sources:
+maintainers:
+  - name: Sapan Gandhi
