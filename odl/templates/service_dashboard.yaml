@@ -14,5 +14,6 @@ spec:
       targetPort: {{ .Values.network.port.dashboard }}
   selector:
 {{ tuple $envAll "odl" "controller" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
+  type: NodePort
 {{ end }}
 

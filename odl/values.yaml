@@ -6,12 +6,12 @@
 
 images:
   tags:
-    odl_controller: docker.io/sapan2211/odl-karaf-boron:full
+    odl_controller: docker.io/sapan2211/odl-karaf-boron:4
   pull_policy: "IfNotPresent"
 
 network:
   node_port:
-    dashboard: 8181
+    dashboard: 35181
   cluster_ip:
     manager: 6640
     controller1: 6653
