@@ -1,4 +1,4 @@
-{{- if .Values.manifests.service }}
+{{- if .Values.manifests.service.ovs }}
 {{- $envAll := . }}
 ---
 apiVersion: v1
@@ -7,23 +7,6 @@ metadata:
   name: {{ tuple "odl" "internal" . | include "helm-toolkit.endpoints.hostname_short_endpoint_lookup" }}
 spec:
   ports:
-    {{ if .Values.network.node_port.enabled }}
-    - name: ovsdb-manager
-      nodePort: {{ .Values.network.node_port.manager }}
-      port: {{ .Values.network.port.manager }}
-      protocol: TCP
-      targetPort: {{ .Values.network.port.manager }}
-    - name: openflow
-      nodePort: {{ .Values.network.node_port.controller1 }}
-      port: {{ .Values.network.port.controller1 }}
-      protocol: TCP
-      targetPort: {{ .Values.network.port.controller1 }}
-    - name: rest
-      nodePort: {{ .Values.network.node_port.odl_neutron_rest }}
-      port: {{ .Values.network.port.odl_neutron_rest }}
-      protocol: TCP
-      targetPort: {{ .Values.network.port.odl_neutron_rest }}
-    {{ end }}
     {{ if .Values.network.cluster_ip.enabled }}
     - name: ovsdb-manager
       port: {{ .Values.network.port.manager }}
@@ -44,9 +27,6 @@ spec:
     {{ end }}
   selector:
 {{ tuple $envAll "odl" "controller" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
-  {{ if .Values.network.node_port.enabled }}
-  type: NodePort
-  {{ end }}
   {{ if .Values.network.cluster_ip.enabled }}
   type: ClusterIP
   {{ end }}

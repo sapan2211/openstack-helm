@@ -1,0 +1,23 @@
+{{- if .Values.manifests.service.dashboard }}
+{{- $envAll := . }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tuple "odl-dashboard" "internal" . | include "helm-toolkit.endpoints.hostname_short_endpoint_lookup" }}
+spec:
+  ports:
+    {{ if .Values.network.node_port.enabled }}
+    - name: dashboard
+      nodePort: {{ .Values.network.node_port.dashboard }}
+      port: {{ .Values.network.port.dashboard }}
+      protocol: TCP
+      targetPort: {{ .Values.network.port.dashboard }}
+    {{ end }}
+  selector:
+{{ tuple $envAll "odl" "controller" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
+  {{ if .Values.network.node_port.enabled }}
+  type: NodePort
+  {{ end }}
+{{ end }}
+

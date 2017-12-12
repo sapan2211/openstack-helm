@@ -11,17 +11,14 @@ images:
 
 network:
   node_port:
-    enabled: false
-    manager: 6640
-    controller1: 6653
-    odl_neutron_rest: 8080
+    enabled: true
+    dashboard: 8181
   cluster_ip:
     enabled: true
     manager: 6640
     controller1: 6653
     controller2: 6633
     odl_neutron_rest: 8080
-    dashboard: 8181
   port:
     manager: 6640
     controller1: 6653
@@ -59,7 +56,9 @@ pod:
         cpu: "2000m"
 manifests:
   deployment: true
-  service: true
+  service:
+    ovs: true
+    dashboard: true
 
 endpoints:
   odl:
@@ -67,6 +66,17 @@ endpoints:
     hosts:
       default: odl
       public: odl
+    host_fqdn_override:
+      default: null
+    path:
+      default: null
+    scheme:
+      default: http
+  dashboard:
+    name: odl-dashboard
+    hosts:
+      default: odl-dashboard
+      public: odl-dashboard
     host_fqdn_override:
       default: null
     path:
