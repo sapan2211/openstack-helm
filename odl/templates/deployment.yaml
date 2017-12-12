@@ -36,7 +36,7 @@ spec:
           securityContext:
             runAsUser: {{ .Values.pod.user.odl.uid }}
           command:
-            - /tmp/start.sh
+            - /tmp/opendaylight.sh
             - start
           lifecycle:
             preStop:
@@ -55,9 +55,9 @@ spec:
           configMap:
             name: odl-bin
             defaultMode: 0555
-        - name: odl-etc
-          configMap:
-            name: odl-etc
-            defaultMode: 0444
+#        - name: odl-etc
+#          configMap:
+#            name: odl-etc
+#            defaultMode: 0444
 {{ if $mounts_odl_controller.volumes }}{{ toYaml $mounts_odl_controller.volumes | indent 6 }}{{ end }}
 {{- end }}
