@@ -7,7 +7,6 @@ metadata:
   name: {{ tuple "odl" "internal" . | include "helm-toolkit.endpoints.hostname_short_endpoint_lookup" }}
 spec:
   ports:
-    {{ if .Values.network.cluster_ip.enabled }}
     - name: ovsdb-manager
       port: {{ .Values.network.port.manager }}
       protocol: TCP
@@ -24,11 +23,6 @@ spec:
       port: {{ .Values.network.port.dashboard }}
       protocol: TCP
       targetPort: {{ .Values.network.cluster_ip.dashboard }}
-    {{ end }}
   selector:
 {{ tuple $envAll "odl" "controller" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
-  {{ if .Values.network.cluster_ip.enabled }}
-  type: ClusterIP
-  {{ end }}
 {{ end }}
-

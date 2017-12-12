@@ -1,10 +1,12 @@
 {{- if .Values.manifests.deployment }}
 {{- $envAll := . }}
+{{- $mounts_odl_controller := .Values.pod.mounts.odl_controller.odl_controller }}
+{{- $mounts_odl_controller_init := .Values.pod.mounts.odl_controller.init_container }}
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: odl
+  name: odl-controller
 spec:
   replicas: {{ .Values.pod.replicas.controller }}
 {{ tuple $envAll | include "helm-toolkit.snippets.kubernetes_upgrades_deployment" | indent 2 }}
@@ -12,24 +14,50 @@ spec:
     metadata:
       labels:
 {{ tuple $envAll "odl" "controller" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
+      annotations:
+        configmap-bin-hash: {{ tuple "configmap-bin.yaml" . | include "helm-toolkit.utils.hash" }}
+        configmap-etc-hash: {{ tuple "configmap-etc.yaml" . | include "helm-toolkit.utils.hash" }}
     spec:
+      affinity:
+{{ tuple $envAll "odl" "controller" | include "helm-toolkit.snippets.kubernetes_pod_anti_affinity" | indent 8 }}
+      nodeSelector:
+        {{ .Values.labels.controller.node_selector_key }}: {{ .Values.labels.controller.node_selector_value }}
       initContainers:
       containers:
-        - name: odl
-          image: {{ .Values.images.tags.odl }}
+        - name: odl-controller
+          image: {{ .Values.images.tags.odl_controller }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
 {{ tuple $envAll $envAll.Values.pod.resources.controller | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
           ports:
-            - containerPort: {{.Values.network.port.manager}}
-            - containerPort: {{.Values.network.port.controller1}}
-            - containerPort: {{.Values.network.port.odl_neutron_rest}}
-            - containerPort: {{.Values.network.port.dashboard}}
+            - containerPort: {{ .Values.network.port.manager }}
+            - containerPort: {{ .Values.network.port.controller1 }}
+            - containerPort: {{ .Values.network.port.odl_neutron_rest }}
+            - containerPort: {{ .Values.network.port.dashboard }}
           securityContext:
-            runAsUser: 0
+            runAsUser: {{ .Values.pod.user.odl.uid }}
           command:
+            - /tmp/start.sh
+            - start
           lifecycle:
             preStop:
               exec:
                 command:
-                  - logout
+                  - /tmp/opendaylight.sh
+                  - stop
+          volumeMounts:
+            - name: odl-bin
+              mountPath: /tmp/opendaylight.sh
+              subPath: opendaylight.sh
+              readOnly: true
+{{ if $mounts_odl_controller.volumeMounts }}{{ toYaml $mounts_odl_controller.volumeMounts | indent 10 }}{{ end }}
+      volumes:
+        - name: odl-bin
+          configMap:
+            name: odl-bin
+            defaultMode: 0555
+        - name: odl-etc
+          configMap:
+            name: odl-etc
+            defaultMode: 0444
+{{ if $mounts_odl_controller.volumes }}{{ toYaml $mounts_odl_controller.volumes | indent 6 }}{{ end }}
 {{- end }}
