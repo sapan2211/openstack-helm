@@ -1,0 +1,28 @@
+images:
+  tags:
+    server: docker.io/sapan2211/ubuntu-source-neutron-server-odl:latest
+conf:
+  plugins:
+    ml2_conf:
+      ml2:
+        extension_drivers: port_security
+        # mechnism_drivers can be: openvswitch, linuxbridge,
+        # opendaylight, ovn
+        mechanism_drivers: opendaylight
+        type_drivers: flat,vlan,vxlan
+        tenant_network_types: vxlan
+      ml2_odl:
+        username: admin
+        password: admin
+      ml2_type_vxlan:
+        vni_ranges: 1:1000
+        vxlan_group: 239.1.1.1
+      ml2_type_flat:
+        flat_networks: "*"
+      # If you want to use the external network as a tagged provider network,
+      # a range should be specified including the intended VLAN target
+      # using ml2_type_vlan.network_vlan_ranges:
+      # ml2_type_vlan:
+      #   network_vlan_ranges: "external:1100:1110"
+manifests:
+  daemonset_ovs_agent: false
