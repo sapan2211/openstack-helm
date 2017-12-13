@@ -49,6 +49,10 @@ spec:
               mountPath: /tmp/opendaylight.sh
               subPath: opendaylight.sh
               readOnly: true
+#            - name: odl-etc
+#              mountPath: /tmp/jetty.xml
+#              subPath: jetty.xml
+#              readOnly: true
 {{ if $mounts_odl_controller.volumeMounts }}{{ toYaml $mounts_odl_controller.volumeMounts | indent 10 }}{{ end }}
       volumes:
         - name: odl-bin

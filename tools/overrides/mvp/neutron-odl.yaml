@@ -1,7 +1,23 @@
 images:
   tags:
-    server: docker.io/sapan2211/ubuntu-source-neutron-server-odl:latest
+    neutron_db_sync: docker.io/sapan2211/ubuntu-source-neutron-server-odl:newton
+    neutron_server: docker.io/sapan2211/ubuntu-source-neutron-server-odl:newton
+
+network:
+  backend: odl
+
+dependencies:
+  dhcp:
+    daemonset: null
+  metadata:
+    daemonset: null
+  l3:
+    daemonset: null
+
 conf:
+  neutron:
+    DEFAULT:
+      service_plugins: odl-router
   plugins:
     ml2_conf:
       ml2:
@@ -9,11 +25,8 @@ conf:
         # mechnism_drivers can be: openvswitch, linuxbridge,
         # opendaylight, ovn
         mechanism_drivers: opendaylight
-        type_drivers: flat,vlan,vxlan
+        type_drivers: flat,vxlan
         tenant_network_types: vxlan
-      ml2_odl:
-        username: admin
-        password: admin
       ml2_type_vxlan:
         vni_ranges: 1:1000
         vxlan_group: 239.1.1.1
@@ -24,5 +37,9 @@ conf:
       # using ml2_type_vlan.network_vlan_ranges:
       # ml2_type_vlan:
       #   network_vlan_ranges: "external:1100:1110"
+  dhcp_agent:
+    OVS:
+      ovsdb_interface: vsctl
+
 manifests:
   daemonset_ovs_agent: false

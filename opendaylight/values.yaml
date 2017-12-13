@@ -6,7 +6,7 @@
 
 images:
   tags:
-    odl_controller: docker.io/sapan2211/odl-karaf-boron:4
+    odl_controller: docker.io/sapan2211/odl-karaf-boron:5
   pull_policy: "IfNotPresent"
 
 network:
