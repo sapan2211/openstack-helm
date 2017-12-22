@@ -19,32 +19,12 @@ limitations under the License.
 set -ex
 COMMAND="${@:-start}"
 
-OVS_DB=/run/openvswitch/conf.db
-OVS_SOCKET=/run/openvswitch/db.sock
-OVS_SCHEMA=/usr/share/openvswitch/vswitch.ovsschema
-
 function start () {
-  mkdir -p "$(dirname ${OVS_DB})"
-  if [[ ! -e "${OVS_DB}" ]]; then
-    ovsdb-tool create "${OVS_DB}"
-  fi
-
-  if [[ "$(ovsdb-tool needs-conversion ${OVS_DB} ${OVS_SCHEMA})" == 'yes' ]]; then
-      ovsdb-tool convert ${OVS_DB} ${OVS_SCHEMA}
-  fi
-
-  umask 000
-  exec /usr/sbin/ovsdb-server ${OVS_DB} \
-          -vconsole:emer \
-          -vconsole:err \
-          -vconsole:info \
-          --remote=punix:${OVS_SOCKET} \
-          --remote=db:Open_vSwitch,Open_vSwitch,manager_options
-  
+  exec ./distribution-karaf-0.5.0-Boron/bin/karaf
 }
 
 function stop () {
-  ovs-appctl -T1 -t /run/openvswitch/ovsdb-server.1.ctl exit
+  kill -TERM 1
 }
 
 $COMMAND

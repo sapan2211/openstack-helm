@@ -989,6 +989,8 @@ conf:
         mechanism_drivers: openvswitch,l2population
         type_drivers: flat,vlan,vxlan
         tenant_network_types: vxlan
+      ml2_odl:
+        processing_timeout: 100
       ml2_type_vxlan:
         vni_ranges: 1:1000
         vxlan_group: 239.1.1.1
@@ -1194,6 +1196,25 @@ endpoints:
     port:
       api:
         default: 9696
+        public: 80
+  odl:
+    name: odl
+    auth:
+      admin:
+        username: admin
+        password: admin
+    hosts:
+      default: odl-controller
+      public: odl
+    host_fqdn_override:
+      default: null
+    path:
+      default: "/controller/nb/v2/neutron"
+    scheme:
+      default: 'http'
+    port:
+      api:
+        default: 8080
         public: 80
 
 manifests:

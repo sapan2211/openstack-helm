@@ -23,6 +23,7 @@ images:
   tags:
     openvswitch_db_server: docker.io/kolla/ubuntu-source-openvswitch-db-server:3.0.3
     openvswitch_vswitchd: docker.io/kolla/ubuntu-source-openvswitch-vswitchd:3.0.3
+    busybox: busybox
   pull_policy: "IfNotPresent"
 
 labels:
@@ -79,6 +80,10 @@ pod:
           memory: "1024Mi"
           cpu: "2000m"
 
+controller:
+  odl: true
+endpoints:
+  odl_controller: odl-controller.openstack.svc.cluster.local
 manifests:
   configmap_bin: true
   daemonset_ovs_db: true

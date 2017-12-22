@@ -20,7 +20,6 @@ set -ex
 COMMAND="${@:-start}"
 
 OVS_SOCKET=/run/openvswitch/db.sock
-
 function start () {
   t=0
   while [ ! -e "${OVS_SOCKET}" ] ; do
@@ -34,7 +33,8 @@ function start () {
   done
 
   ovs-vsctl --no-wait show
-
+  {{- if .Values.controller.odl}}
+  {{ else }}
   external_bridge="{{- .Values.network.external_bridge -}}"
   external_interface="{{- .Values.network.interface.external -}}"
   if [ -n "${external_bridge}" ] ; then
@@ -46,7 +46,7 @@ function start () {
           ip link set dev $external_interface up
       fi
   fi
-
+  {{- end }}
   # handle any bridge mappings
   {{- range $br, $phys := .Values.network.auto_bridge_add }}
   if [ -n "{{- $br -}}" ] ; then
