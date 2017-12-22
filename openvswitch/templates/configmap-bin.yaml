@@ -28,4 +28,6 @@ data:
 {{ tuple "bin/_openvswitch-vswitchd.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   openvswitch-vswitchd-init-modules.sh: |+
 {{ tuple "bin/_openvswitch-vswitchd-init-modules.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+  openvswitch-vswitchd-poststart.sh: |+
+{{ tuple "bin/_openvswitch-vswitchd-poststart.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}

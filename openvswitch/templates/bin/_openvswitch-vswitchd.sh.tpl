@@ -60,13 +60,10 @@ function start () {
   {{- end }}
 
   exec /usr/sbin/ovs-vswitchd unix:${OVS_SOCKET} \
-          --log-file=/var/log/openvswitch/ovs-vswitchd.log \
+          -vconsole:emer \
           -vconsole:err \
-          -vsyslog:info \
-          -vfile:info
-
-  ovs-vsctl set-manager tcp:10.96.247.208:6640
-
+          -vconsole:info \
+          --mlockall
 }
 
 function stop () {
