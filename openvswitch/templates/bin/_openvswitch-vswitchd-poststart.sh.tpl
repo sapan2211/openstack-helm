@@ -23,7 +23,7 @@ function start () {
   while true;
   do
     OVS_MANAGER=$(ovs-vsctl get-manager)
-    ODL_IP=$(cat /tmp/ip.txt)
+    ODL_IP=$(cat /run/ip.txt)
     if [ "$OVS_MANAGER" != "tcp:$ODL_IP:6640" ]
     then
        ovs-vsctl set-manager tcp:$ODL_IP:6640

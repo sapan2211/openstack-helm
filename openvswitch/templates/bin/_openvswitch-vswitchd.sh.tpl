@@ -20,7 +20,6 @@ set -ex
 COMMAND="${@:-start}"
 
 OVS_SOCKET=/run/openvswitch/db.sock
-OVS_VSWITCH_PID=/var/run/openvswitch/ovs-vswitchd.pid
 function start () {
   t=0
   while [ ! -e "${OVS_SOCKET}" ] ; do

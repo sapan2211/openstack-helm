@@ -22,7 +22,6 @@ COMMAND="${@:-start}"
 OVS_DB=/run/openvswitch/conf.db
 OVS_SOCKET=/run/openvswitch/db.sock
 OVS_SCHEMA=/usr/share/openvswitch/vswitch.ovsschema
-OVS_DB_PID=/var/run/openvswitch/ovsdb-server.pid
 
 function start () {
   mkdir -p "$(dirname ${OVS_DB})"
