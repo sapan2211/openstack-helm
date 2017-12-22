@@ -30,4 +30,6 @@ data:
 {{ tuple "bin/_openvswitch-vswitchd-init-modules.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   openvswitch-vswitchd-poststart.sh: |+
 {{ tuple "bin/_openvswitch-vswitchd-poststart.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+  openvswitch-odl-dnsresolve.sh: |+
+{{ tuple "bin/_openvswitch-odl-dnsresolve.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}

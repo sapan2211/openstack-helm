@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 {{/*
 Copyright 2017 The Openstack-Helm Authors.
@@ -22,14 +22,9 @@ COMMAND="${@:-start}"
 function start () {
   while true;
   do
-    OVS_MANAGER=$(ovs-vsctl get-manager)
-    ODL_IP=$(cat /tmp/ip.txt)
-    if [ "$OVS_MANAGER" != "tcp:$ODL_IP:6640" ]
-    then
-       ovs-vsctl set-manager tcp:$ODL_IP:6640
-    fi
-    sleep 30;
-  done   
+    echo $(nslookup odl-controller.openstack | tail -n 1 | awk '{print $3}') > /run/ip.txt; 
+    sleep 30; 
+  done
 }
 
 $COMMAND

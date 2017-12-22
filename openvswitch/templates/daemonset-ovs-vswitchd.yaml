@@ -54,6 +54,20 @@ spec:
               mountPath: /mnt/host-rootfs
               readOnly: true
       containers:
+        - name: busybox-nslookup
+          image: busybox
+          securityContext:
+            runAsUser: 0
+          command:
+            - /tmp/openvswitch-odl-dnsresolve.sh
+            - start
+          volumeMounts:
+            - name: openvswitch-bin
+              mountPath: /tmp/openvswitch-odl-dnsresolve.sh
+              subPath: openvswitch-odl-dnsresolve.sh
+              readOnly: true
+            - name: run
+              mountPath: /run
         - name: openvswitch-vswitchd
           image: {{ .Values.images.tags.openvswitch_vswitchd }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
