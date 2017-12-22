@@ -1,3 +1,15 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 {{- if .Values.manifests.service.ovs }}
 {{- $envAll := . }}
 ---
@@ -8,17 +20,17 @@ metadata:
 spec:
   ports:
     - name: ovsdb-manager
-      port: {{ .Values.network.port.manager }}
+      port: {{ .Values.network.port.ovsdb_manager }}
       protocol: TCP
-      targetPort: {{ .Values.network.cluster_ip.manager }}
+      targetPort: {{ .Values.network.port.ovsdb_manager }}
     - name: openflow
-      port: {{ .Values.network.port.controller1 }}
+      port: {{ .Values.network.port.openflow }}
       protocol: TCP
-      targetPort: {{ .Values.network.cluster_ip.controller1 }}
+      targetPort: {{ .Values.network.port.openflow }}
     - name: rest
       port: {{ .Values.network.port.odl_neutron_rest }}
       protocol: TCP
-      targetPort: {{ .Values.network.cluster_ip.odl_neutron_rest }}
+      targetPort: {{ .Values.network.port.odl_neutron_rest }}
   selector:
 {{ tuple $envAll "odl" "controller" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
 {{ end }}
