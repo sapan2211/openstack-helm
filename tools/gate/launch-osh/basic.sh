@@ -127,14 +127,6 @@ else
          --set pod.replicas.server=1
 fi
 
-if [ "x$INTEGRATION" == "xaio" ]; then
-  helm install --namespace=openstack ${WORK_DIR}/odl --name=odl \
-    --set pod.replicas.server=1
-  kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
-fi
-
-
-
 if [ "x$INTEGRATION" == "xmulti" ]; then
   if [ "x$PVC_BACKEND" == "xceph" ]; then
     #NOTE(portdirect): Deploy Telemetry componets here to enable ingestion
@@ -206,18 +198,6 @@ kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
 helm install --namespace=openstack ${WORK_DIR}/congress --name=congress
 kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
 
-if [ "x$INTEGRATION" == "xaio" ]; then
-  helm install --namespace=openstack ${WORK_DIR}/horizon --name=horizon \
-    --set pod.replicas.server=1
-  kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
-fi
-#if [ "x$INTEGRATION" == "xaio" ]; then
-  #helm install --namespace=openstack ${WORK_DIR}/odl --name=odl \
-    #--set pod.replicas.server=1
-  #kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
-#fi
-
-
 if [ "x$INTEGRATION" == "xmulti" ]; then
   helm install --namespace=openstack ${WORK_DIR}/horizon --name=horizon
   kube_wait_for_pods openstack ${POD_START_TIMEOUT_OPENSTACK}
@@ -237,7 +217,7 @@ if [ "x$INTEGRATION" == "xmulti" ]; then
   helm_test_deployment cinder ${SERVICE_TEST_TIMEOUT}
   helm_test_deployment neutron ${SERVICE_TEST_TIMEOUT}
   helm_test_deployment nova ${SERVICE_TEST_TIMEOUT}
-  helm_test_deployment barbican ${SERVICE_TEST_TIMEOUT} norally
+  helm_test_deployment barbican ${SERVICE_TEST_TIMEOUT}
 fi
 
 if [ "x$RALLY_CHART_ENABLED" == "xtrue" ]; then

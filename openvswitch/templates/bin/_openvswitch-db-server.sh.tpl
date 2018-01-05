@@ -38,9 +38,7 @@ function start () {
           -vconsole:emer \
           -vconsole:err \
           -vconsole:info \
-          --remote=punix:${OVS_SOCKET} \
-          --remote=db:Open_vSwitch,Open_vSwitch,manager_options
-  
+          --remote=punix:${OVS_SOCKET}
 }
 
 function stop () {

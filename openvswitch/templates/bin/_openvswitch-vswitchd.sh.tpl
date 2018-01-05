@@ -20,6 +20,7 @@ set -ex
 COMMAND="${@:-start}"
 
 OVS_SOCKET=/run/openvswitch/db.sock
+
 function start () {
   t=0
   while [ ! -e "${OVS_SOCKET}" ] ; do
@@ -34,17 +35,17 @@ function start () {
 
   ovs-vsctl --no-wait show
 
-#  external_bridge="{{- .Values.network.external_bridge -}}"
-#  external_interface="{{- .Values.network.interface.external -}}"
-#  if [ -n "${external_bridge}" ] ; then
+  external_bridge="{{- .Values.network.external_bridge -}}"
+  external_interface="{{- .Values.network.interface.external -}}"
+  if [ -n "${external_bridge}" ] ; then
       # create bridge device
-#      ovs-vsctl --no-wait --may-exist add-br $external_bridge
-#      if [ -n "$external_interface" ] ; then
-#          # add external interface to the bridge
-#          ovs-vsctl --no-wait --may-exist add-port $external_bridge $external_interface
-#          ip link set dev $external_interface up
-#      fi
-#  fi
+      ovs-vsctl --no-wait --may-exist add-br $external_bridge
+      if [ -n "$external_interface" ] ; then
+          # add external interface to the bridge
+          ovs-vsctl --no-wait --may-exist add-port $external_bridge $external_interface
+          ip link set dev $external_interface up
+      fi
+  fi
 
   # handle any bridge mappings
   {{- range $br, $phys := .Values.network.auto_bridge_add }}

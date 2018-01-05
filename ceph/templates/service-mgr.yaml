@@ -14,26 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */}}
 
-{{- if .Values.manifests.service }}
+{{- if .Values.manifests.service_mgr }}
 {{- $envAll := . }}
+{{- if .Values.deployment.ceph }}
+{{- if .Values.ceph.enabled.mgr }}
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: {{ tuple "nfs" "internal" . | include "helm-toolkit.endpoints.hostname_short_endpoint_lookup" }}
-  labels:
-{{ tuple $envAll "nfs" "provisioner" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
+  name: ceph-mgr
 spec:
   ports:
-    - name: nfs
-      port: 2049
-    - name: mountd
-      port: 20048
-    - name: rpcbind
-      port: 111
-    - name: rpcbind-udp
-      port: 111
-      protocol: UDP
+  - port: {{ .Values.network.port.mgr }}
+    protocol: TCP
+    targetPort: {{ .Values.network.port.mgr }}
   selector:
-{{ tuple $envAll "nfs" "provisioner" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
+{{ tuple $envAll "ceph" "mgr" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 4 }}
+{{- end }}
+{{- end }}
 {{- end }}

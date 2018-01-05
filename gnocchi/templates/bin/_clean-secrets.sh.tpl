@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 {{/*
 Copyright 2017 The Openstack-Helm Authors.
@@ -17,14 +17,8 @@ limitations under the License.
 */}}
 
 set -ex
-COMMAND="${@:-start}"
 
-function start () {
-  while true;
-  do
-    echo $(nslookup odl-controller.openstack | tail -n 1 | awk '{print $3}') > /run/ip.txt; 
-    sleep 30; 
-  done
-}
-
-$COMMAND
+exec kubectl delete secret \
+  --namespace ${NAMESPACE} \
+  --ignore-not-found=true \
+  ${RBD_POOL_SECRET}

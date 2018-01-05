@@ -1,5 +1,3 @@
-#!/bin/bash
-
 {{/*
 Copyright 2017 The Openstack-Helm Authors.
 
@@ -16,20 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */}}
 
-set -ex
-COMMAND="${@:-start}"
+{{- $envAll := . }}
 
-function start () {
-  while true;
-  do
-    OVS_MANAGER=$(ovs-vsctl get-manager)
-    ODL_IP=$(cat /run/ip.txt)
-    if [ "$OVS_MANAGER" != "tcp:$ODL_IP:6640" ]
-    then
-       ovs-vsctl set-manager tcp:$ODL_IP:6640
-    fi
-    sleep 30;
-  done   
-}
-
-$COMMAND
+{{- $serviceAccountName := "ingress-api" }}
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: nginx-ingress-role-nisa-binding
+  namespace: {{ $envAll.Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: nginx-ingress-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ $serviceAccountName }}
+    namespace: {{ $envAll.Release.Namespace }}

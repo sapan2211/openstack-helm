@@ -1,3 +1,5 @@
+#!/bin/bash
+
 {{/*
 Copyright 2017 The Openstack-Helm Authors.
 
@@ -14,14 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */}}
 
-{{- if .Values.manifests.configmap_bin }}
-{{- $envAll := . }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: odl-bin
-data:
-  opendaylight.sh: |+
-{{ tuple "bin/_opendaylight.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
-{{- end }}
+set -ex
+
+exec kubectl delete secret \
+  --namespace ${NAMESPACE} \
+  --ignore-not-found=true \
+  ${RBD_POOL_SECRET}

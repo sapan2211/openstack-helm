@@ -24,9 +24,12 @@ true
 {{- end -}}
 {{- end -}}
 
-{{- define "cinder.is_ceph_backup_configured" -}}
-{{- $values := .Values.conf.cinder.DEFAULT -}}
-{{- if eq $values.backup_driver "cinder.backup.drivers.ceph" -}}
-true
+{{- define "cinder.ceph_volume_section_name" -}}
+{{- range $section, $values := .Values.conf.backends -}}
+{{- if kindIs "map" $values -}}
+{{- if eq $values.volume_driver "cinder.volume.drivers.rbd.RBDDriver" -}}
+{{ $section }}
+{{- end -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}

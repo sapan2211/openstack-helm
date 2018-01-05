@@ -17,16 +17,21 @@ limitations under the License.
 {{- if .Values.manifests.pod_rally_test }}
 {{- $envAll := . }}
 {{- $dependencies := .Values.dependencies.tests }}
+
 {{- $mounts_nova_tests := .Values.pod.mounts.nova_tests.nova_tests }}
 {{- $mounts_nova_tests_init := .Values.pod.mounts.nova_tests.init_container }}
+
+{{- $serviceAccountName := print .Release.Name "-test" }}
+{{ tuple $envAll $dependencies $serviceAccountName | include "helm-toolkit.snippets.kubernetes_pod_rbac_serviceaccount" }}
 ---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{.Release.Name}}-rally-test"
+  name: "{{.Release.Name}}-test"
   annotations:
     "helm.sh/hook": test-success
 spec:
+  serviceAccountName: {{ $serviceAccountName }}
   restartPolicy: Never
   initContainers:
 {{ tuple $envAll $dependencies $mounts_nova_tests_init | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 4 }}

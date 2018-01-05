@@ -57,21 +57,6 @@ limitations under the License.
 {{- tuple "oslo_db" "internal" "user" "mysql" . | include "helm-toolkit.endpoints.authenticated_endpoint_uri_lookup"| set .Values.conf.neutron.database "connection" | quote | trunc 0 -}}
 {{- end }}
 
-{{- if eq .Values.network.backend "odl" -}}
-{{- if empty .Values.conf.plugins.ml2_conf.ml2_odl.url -}}
-{{- tuple "odl" "internal" "api" . | include "helm-toolkit.endpoints.keystone_endpoint_uri_lookup"| set .Values.conf.plugins.ml2_conf.ml2_odl "url" | quote | trunc 0 -}}
-{{- end }}
-
-{{- if empty .Values.conf.plugins.ml2_conf.ml2_odl.username -}}
-{{- set .Values.conf.plugins.ml2_conf.ml2_odl "username" .Values.endpoints.odl.auth.admin.username | quote | trunc 0 -}}
-{{- end -}}
-{{- if empty .Values.conf.plugins.ml2_conf.ml2_odl.password -}}
-{{- set .Values.conf.plugins.ml2_conf.ml2_odl "password" .Values.endpoints.odl.auth.admin.password | quote | trunc 0 -}}
-{{- end -}}
-
-{{- end }}
-
-
 {{- if empty .Values.conf.neutron.DEFAULT.transport_url -}}
 {{- tuple "oslo_messaging" "internal" "user" "amqp" . | include "helm-toolkit.endpoints.authenticated_endpoint_uri_lookup" | set .Values.conf.neutron.DEFAULT "transport_url" | quote | trunc 0 -}}
 {{- end }}
