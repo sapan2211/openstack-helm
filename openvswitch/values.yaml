@@ -24,6 +24,7 @@ images:
     openvswitch_db_server: docker.io/kolla/ubuntu-source-openvswitch-db-server:3.0.3
     openvswitch_vswitchd: docker.io/kolla/ubuntu-source-openvswitch-vswitchd:3.0.3
     dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.2.1
+    busybox: busybox
   pull_policy: "IfNotPresent"
 
 labels:
@@ -84,6 +85,10 @@ dependencies:
   vswitchd: null
   db: null
 
+controller:
+  odl: true
+endpoints:
+  odl_controller: odl-controller.openstack.svc.cluster.local
 manifests:
   configmap_bin: true
   daemonset_ovs_db: true

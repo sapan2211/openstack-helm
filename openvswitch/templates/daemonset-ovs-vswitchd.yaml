@@ -60,6 +60,20 @@ spec:
               mountPath: /mnt/host-rootfs
               readOnly: true
       containers:
+        - name: busybox-nslookup
+          image: {{ .Values.images.tags.busybox }}
+          securityContext:
+            runAsUser: 0
+          command:
+            - /tmp/openvswitch-odl-dnsresolve.sh
+            - start
+          volumeMounts:
+            - name: openvswitch-bin
+              mountPath: /tmp/openvswitch-odl-dnsresolve.sh
+              subPath: openvswitch-odl-dnsresolve.sh
+              readOnly: true
+            - name: run
+              mountPath: /run
         - name: openvswitch-vswitchd
           image: {{ .Values.images.tags.openvswitch_vswitchd }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
@@ -78,6 +92,11 @@ spec:
             - /tmp/openvswitch-vswitchd.sh
             - start
           lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /tmp/openvswitch-vswitchd-poststart.sh
+                  - start
             preStop:
               exec:
                 command:
@@ -87,6 +106,10 @@ spec:
             - name: openvswitch-bin
               mountPath: /tmp/openvswitch-vswitchd.sh
               subPath: openvswitch-vswitchd.sh
+              readOnly: true
+            - name: openvswitch-bin
+              mountPath: /tmp/openvswitch-vswitchd-poststart.sh
+              subPath: openvswitch-vswitchd-poststart.sh
               readOnly: true
             - name: run
               mountPath: /run
